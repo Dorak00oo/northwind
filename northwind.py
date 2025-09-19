@@ -291,13 +291,13 @@ def save_employee():
             messagebox.showwarning("Advertencia", "EmployeeID, LastName y FirstName son campos obligatorios")
             return
         
-        query = "INSERT INTO employees (EmployeeID, LastName, FirstName, Title, BirthDate, Notes) VALUES (%s, %s, %s, %s, %s, %s)"
+        query = "INSERT INTO employees (EmployeeID, LastName, FirstName, BirthDate, Photo, Notes) VALUES (%s, %s, %s, %s, %s, %s)"
         params = (
             int(EmployeeID.get()) if EmployeeID.get() else None,
             LastName.get(),
             FirstName.get(),
-            Title.get(),
             BirthDate.get_date() if BirthDate.get_date() else None,
+            "",  # Photo - campo vacío por ahora
             Notes.get("1.0", tk.END).strip()
         )
         
@@ -314,12 +314,12 @@ def update_employee():
             messagebox.showwarning("Advertencia", "EmployeeID es obligatorio para actualizar")
             return
         
-        query = "UPDATE employees SET LastName=%s, FirstName=%s, Title=%s, BirthDate=%s, Notes=%s WHERE EmployeeID=%s"
+        query = "UPDATE employees SET LastName=%s, FirstName=%s, BirthDate=%s, Photo=%s, Notes=%s WHERE EmployeeID=%s"
         params = (
             LastName.get(),
             FirstName.get(),
-            Title.get(),
             BirthDate.get_date() if BirthDate.get_date() else None,
+            "",  # Photo - campo vacío por ahora
             Notes.get("1.0", tk.END).strip(),
             int(EmployeeID.get())
         )
@@ -352,7 +352,6 @@ def clear_employee_form():
     EmployeeID.delete(0, tk.END)
     LastName.delete(0, tk.END)
     FirstName.delete(0, tk.END)
-    Title.delete(0, tk.END)
     Notes.delete("1.0", tk.END)
 
 def show_all_employees():
@@ -360,7 +359,7 @@ def show_all_employees():
         for item in tree_employees.get_children():
             tree_employees.delete(item)
         
-        query = "SELECT EmployeeID, LastName, FirstName, Title, BirthDate, Notes FROM employees"
+        query = "SELECT EmployeeID, LastName, FirstName, BirthDate, Photo, Notes FROM employees"
         employees = db.fetch_all(query)
         
         for employee in employees:
@@ -777,6 +776,7 @@ def show_all_orderdetails():
         messagebox.showerror("Error", f"Error al mostrar detalles de pedido: {e}")
 
 
+
 # FUNCIÓN PARA PROBAR LA CONEXIÓN
 def test_connection():
     """Prueba la conexión a la base de datos"""
@@ -1051,20 +1051,15 @@ tk.Label(form_frame, text="FirstName:", font=("Arial", 12)).grid(row=3, column=0
 FirstName = tk.Entry(form_frame, width=25, font=("Arial", 12), relief="solid", bd=1)
 FirstName.grid(row=3, column=1, sticky="w", pady=10)
 
-# Fila 4: Title
-tk.Label(form_frame, text="Title:", font=("Arial", 12)).grid(row=4, column=0, sticky="w", padx=(0, 10), pady=10)
-Title = tk.Entry(form_frame, width=25, font=("Arial", 12), relief="solid", bd=1)
-Title.grid(row=4, column=1, sticky="w", pady=10)
-
-# Fila 5: BirthDate
-tk.Label(form_frame, text="BirthDate:", font=("Arial", 12)).grid(row=5, column=0, sticky="w", padx=(0, 10), pady=10)
+# Fila 4: BirthDate
+tk.Label(form_frame, text="BirthDate:", font=("Arial", 12)).grid(row=4, column=0, sticky="w", padx=(0, 10), pady=10)
 BirthDate = DateEntry(form_frame, width=25, font=("Arial", 12), date_pattern="yyyy-mm-dd", background="darkblue", foreground="white", borderwidth=2)
-BirthDate.grid(row=5, column=1, sticky="w", pady=10)
+BirthDate.grid(row=4, column=1, sticky="w", pady=10)
 
-# Fila 6: Notes
-tk.Label(form_frame, text="Notes:", font=("Arial", 12)).grid(row=6, column=0, sticky="w", padx=(0, 10), pady=10)
+# Fila 5: Notes
+tk.Label(form_frame, text="Notes:", font=("Arial", 12)).grid(row=5, column=0, sticky="w", padx=(0, 10), pady=10)
 Notes = tk.Text(form_frame, width=25, height=4, font=("Arial", 12), relief="solid", bd=1)
-Notes.grid(row=6, column=1, sticky="w", pady=10)
+Notes.grid(row=5, column=1, sticky="w", pady=10)
 
 # Frame para botones
 button_frame3 = tk.Frame(tab3)
@@ -1090,19 +1085,19 @@ btn_emp_show_all.pack(side=tk.LEFT, padx=5)
 tree_frame3 = tk.Frame(tab3)
 tree_frame3.pack(fill="both", expand=True, padx=20, pady=10)
 
-tree_employees = ttk.Treeview(tree_frame3, columns=("EmployeeID", "LastName", "FirstName", "Title", "BirthDate", "Notes"), show="headings", height=8)
+tree_employees = ttk.Treeview(tree_frame3, columns=("EmployeeID", "LastName", "FirstName", "BirthDate", "Photo", "Notes"), show="headings", height=8)
 tree_employees.heading("EmployeeID", text="ID")
 tree_employees.heading("LastName", text="Apellido")
 tree_employees.heading("FirstName", text="Nombre")
-tree_employees.heading("Title", text="Cargo")
 tree_employees.heading("BirthDate", text="Fecha Nacimiento")
+tree_employees.heading("Photo", text="Foto")
 tree_employees.heading("Notes", text="Notas")
 
 tree_employees.column("EmployeeID", width=60)
 tree_employees.column("LastName", width=120)
 tree_employees.column("FirstName", width=120)
-tree_employees.column("Title", width=150)
 tree_employees.column("BirthDate", width=120)
+tree_employees.column("Photo", width=100)
 tree_employees.column("Notes", width=200)
 
 scrollbar_employees = ttk.Scrollbar(tree_frame3, orient="vertical", command=tree_employees.yview)
