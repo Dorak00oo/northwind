@@ -1,18 +1,16 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from datetime import datetime
 from tkcalendar import DateEntry
 import mysql.connector
 from mysql.connector import Error
 
-# CONFIGURACIÓN DE BASE DE DATOS INTEGRADA
-# Cambia estos valores según tu configuración de MySQL/HeidiSQL
+# CONFIGURACIÓN DE BASE DE DATOS 
 DATABASE_CONFIG = {
-    'host': 'localhost',      # Dirección del servidor MySQL
-    'user': 'root',           # Usuario de MySQL (cambiar si es necesario)
-    'password': '',           # Contraseña de MySQL (cambiar por tu contraseña)
-    'database': 'northwind'   # Nombre de la base de datos
+    'host': 'localhost',      
+    'user': 'root',           
+    'password': '',           
+    'database': 'northwind'   
 }
 
 
@@ -93,7 +91,7 @@ class DatabaseConnection:
             return []
 
 
-# Crear instancia de conexión usando la configuración importada
+# Conexión usando la configuración importada
 db = DatabaseConnection(**DATABASE_CONFIG)
 
 
@@ -297,7 +295,7 @@ def save_employee():
             LastName.get(),
             FirstName.get(),
             BirthDate.get_date() if BirthDate.get_date() else None,
-            "",  # Photo - campo vacío por ahora
+            "", 
             Notes.get("1.0", tk.END).strip()
         )
         
@@ -319,7 +317,7 @@ def update_employee():
             LastName.get(),
             FirstName.get(),
             BirthDate.get_date() if BirthDate.get_date() else None,
-            "",  # Photo - campo vacío por ahora
+            "", 
             Notes.get("1.0", tk.END).strip(),
             int(EmployeeID.get())
         )
