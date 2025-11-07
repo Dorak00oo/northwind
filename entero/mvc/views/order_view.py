@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkcalendar import DateEntry
 
 from mvc.utils.validation import validate_int_input
+from mvc.utils.export import export_treeview_to_excel
 
 
 class OrderView:
@@ -47,6 +48,7 @@ class OrderView:
         tk.Button(button_frame, text="Eliminar", font=("Arial", 12), bg="#f44336", fg="white", width=10, command=self._on_delete).pack(side=tk.LEFT, padx=5)
         tk.Button(button_frame, text="Limpiar", font=("Arial", 12), bg="#FF9800", fg="white", width=10, command=self.clear).pack(side=tk.LEFT, padx=5)
         tk.Button(button_frame, text="Mostrar Todos", font=("Arial", 12), bg="#9C27B0", fg="white", width=12, command=controller.refresh).pack(side=tk.LEFT, padx=5)
+        tk.Button(button_frame, text="Exportar a Excel", font=("Arial", 12), bg="#607D8B", fg="white", width=15, command=self.export_to_excel).pack(side=tk.LEFT, padx=5)
 
         tree_frame = tk.Frame(parent)
         tree_frame.pack(fill="both", expand=True, padx=20, pady=10)
@@ -100,3 +102,7 @@ class OrderView:
             self.tree.delete(item)
         for row in rows:
             self.tree.insert('', 'end', values=row)
+
+    def export_to_excel(self):
+        self.controller.refresh()
+        export_treeview_to_excel(self.tree, "orders")
